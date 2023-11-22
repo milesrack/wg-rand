@@ -1,0 +1,10 @@
+#!/bin/bash
+server=$(ls /etc/wireguard/*.conf | sed -e 's/\/etc\/wireguard\///' -e 's/\.conf//' | shuf -n 1)
+current_server=$(wg show | grep interface | cut -d ' ' -f 2)
+if [ "$current_server" != "" ]
+then
+	echo "[+] Disconnecting from $current_server"
+	wg-quick down $current_server
+fi
+echo "[+] Connecting to $server"
+wg-quick up $server
